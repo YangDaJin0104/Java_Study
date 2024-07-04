@@ -1,15 +1,9 @@
 public class Main {
     public static void main(String[] args) {
-        int i = 10;
-        float f = 3.14f;
-        double d = 1.23456789;
-        char c = 'A';
-        String s = "ABC";
+        int i = 5;
+        int j = 5;
 
-        System.out.printf("i = %d%n", i); // %n = 줄바꿈
-        System.out.printf("f = %f%n", f);
-        System.out.printf("d = %f%n", d); // 마지막 자리 반올림됨
-        System.out.printf("c = %c%n", c);
-        System.out.printf("s = %s%n", s);
+        System.out.println(i++); // i의 값을 출력 후 1 증가 -> 출력 결과 5
+        System.out.println(++j); // j의 값을 증가 후 출력 -> 출력 결과 6
     }
 }
