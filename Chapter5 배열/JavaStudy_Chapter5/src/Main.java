@@ -1,16 +1,28 @@
-import javax.swing.text.Style;
-import java.util.Arrays;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        int arr[][] = new int[][]{{1, 2, 3}, {4, 5, 6}};
-        int arr2[][] = {{10, 20, 30,}, {40, 50, 60}}; // new int 생략가능
+        // 2차원 배열로 단어와 그 뜻을 저장
+        String words[][] = {
+                {"chair", "의자"},
+                {"book", "책"},
+                {"apple", "사과"}
+        };
 
-        System.out.println(Arrays.toString(arr));
+        Scanner scanner = new Scanner(System.in);
 
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[i].length; j++) {
-                System.out.printf("arr3[%d][%d] = %d%n", i,j,arr[i][j]);
+        // 사용자에게 단어의 뜻을 묻는 퀴즈
+        for (int i = 0; i < words.length; i++) {
+            System.out.printf("%d. %s의 뜻은? ", i+1, words[i][0]);
+
+            // 사용자로부터 입력을 받음
+            String temp = scanner.nextLine();
+
+            // 정답 확인
+            if (temp.equals(words[i][1])) {
+                System.out.printf("정답입니다.%n%n");
+            } else {
+                System.out.printf("틀렸습니다. 정답은 %s입니다. %n%n", words[i][1]);
             }
         }
     }
