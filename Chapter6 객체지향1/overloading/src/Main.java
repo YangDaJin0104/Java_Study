@@ -59,62 +59,65 @@ public class Main {
 
     // 함수 호출을 처리하는 메서드입니다.
     private static String processFunctionCall(String call) {
-        String[] parts = call.split(" ");
-        String returnType = parts[0];
-        String equalsSign = parts[1];
-        String functionName = parts[2];
-        int numParams = Integer.parseInt(parts[3]);
+        try {
+            String[] parts = call.split(" ");
+            String returnType = parts[0];
+            String functionName = parts[2];
+            int numParams = Integer.parseInt(parts[3]);
 
-        List<String> paramTypes = new ArrayList<>();
-        int idx = 4;
-        for (int i = 0; i < numParams; i++) {
-            if (Character.isUpperCase(parts[idx].charAt(0))) {
-                paramTypes.add(parts[idx]);
-                idx++;
-            } else {
-                // 중첩된 함수 호출을 처리합니다.
-                StringBuilder nestedCall = new StringBuilder();
-                int balance = 1;
-                nestedCall.append(parts[idx++]);
-                while (balance > 0 && idx < parts.length) {
-                    if (Character.isLowerCase(parts[idx].charAt(0))) {
-                        balance++;
-                    } else if (Character.isUpperCase(parts[idx].charAt(0))) {
-                        balance--;
+            List<String> paramTypes = new ArrayList<>();
+            int idx = 4;
+            for (int i = 0; i < numParams; i++) {
+                if (Character.isUpperCase(parts[idx].charAt(0))) {
+                    paramTypes.add(parts[idx]);
+                    idx++;
+                } else {
+                    // 중첩된 함수 호출을 처리합니다.
+                    StringBuilder nestedCall = new StringBuilder();
+                    int balance = 1;
+                    nestedCall.append(parts[idx++]);
+                    while (balance > 0 && idx < parts.length) {
+                        if (Character.isLowerCase(parts[idx].charAt(0))) {
+                            balance++;
+                        } else if (Character.isUpperCase(parts[idx].charAt(0))) {
+                            balance--;
+                        }
+                        nestedCall.append(" ").append(parts[idx++]);
                     }
-                    nestedCall.append(" ").append(parts[idx++]);
-                }
-                String nestedResult = processFunctionCall(nestedCall.toString().trim());
-                if (nestedResult.equals("impossible") || nestedResult.startsWith("ambiguous")) {
-                    return nestedResult;
-                }
-                paramTypes.add(nestedResult.split(" ")[0]); // return type을 가져옵니다.
-            }
-        }
-
-        // 후보 함수 목록을 찾습니다.
-        List<Function> candidates = new ArrayList<>();
-        if (functions.containsKey(functionName)) {
-            for (Function function : functions.get(functionName)) {
-                if (function.paramTypes.equals(paramTypes) && function.returnType.equals(returnType)) {
-                    candidates.add(function);
+                    String nestedResult = processFunctionCall(nestedCall.toString().trim());
+                    if (nestedResult.equals("impossible") || nestedResult.startsWith("ambiguous")) {
+                        return nestedResult;
+                    }
+                    paramTypes.add(nestedResult.split(" ")[0]); // return type을 가져옵니다.
                 }
             }
-        }
 
-        // 후보 함수가 없으면 "impossible"을 반환합니다.
-        if (candidates.isEmpty()) {
-            return "impossible";
-        } else if (candidates.size() == 1) {
-            // 유일한 후보 함수가 있으면 시리얼 넘버를 붙여 반환합니다.
-            return buildFunctionCallString(returnType, functionName, numParams, paramTypes, candidates.get(0).serialNumber);
-        } else {
-            // 후보 함수가 여러 개이면 "ambiguous"를 반환합니다.
-            if (candidates.size() > 1000) {
-                return "ambiguous > 1000";
+            // 후보 함수 목록을 찾습니다.
+            List<Function> candidates = new ArrayList<>();
+            if (functions.containsKey(functionName)) {
+                for (Function function : functions.get(functionName)) {
+                    if (function.paramTypes.equals(paramTypes) && function.returnType.equals(returnType)) {
+                        candidates.add(function);
+                    }
+                }
+            }
+
+            // 후보 함수가 없으면 "impossible"을 반환합니다.
+            if (candidates.isEmpty()) {
+                return "impossible";
+            } else if (candidates.size() == 1) {
+                // 유일한 후보 함수가 있으면 시리얼 넘버를 붙여 반환합니다.
+                return buildFunctionCallString(returnType, functionName, numParams, paramTypes, candidates.get(0).serialNumber);
             } else {
-                return "ambiguous " + candidates.size();
+                // 후보 함수가 여러 개이면 "ambiguous"를 반환합니다.
+                if (candidates.size() > 1000) {
+                    return "ambiguous > 1000";
+                } else {
+                    return "ambiguous " + candidates.size();
+                }
             }
+        } catch (Exception e) {
+            return "impossible";
         }
     }
 
