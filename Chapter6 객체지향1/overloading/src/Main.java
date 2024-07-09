@@ -1,5 +1,6 @@
 import java.util.*;
 
+// Function 클래스는 함수의 이름, 매개변수 타입 목록, 반환 타입, 시리얼 넘버를 저장합니다.
 class Function {
     String name;
     List<String> paramTypes;
@@ -15,6 +16,7 @@ class Function {
 }
 
 public class Main {
+    // 함수 이름을 키로 하고 해당 함수들의 리스트를 값으로 가지는 해시맵입니다.
     static Map<String, List<Function>> functions = new HashMap<>();
 
     public static void main(String[] args) {
@@ -34,9 +36,11 @@ public class Main {
             }
             String returnType = parts[2 + numParams];
 
+            // 함수 이름에 해당하는 리스트가 없으면 새로 생성합니다.
             if (!functions.containsKey(name)) {
                 functions.put(name, new ArrayList<>());
             }
+            // 시리얼 넘버를 부여하고 함수를 리스트에 추가합니다.
             int serialNumber = functions.get(name).size() + 1;
             functions.get(name).add(new Function(name, paramTypes, returnType, serialNumber));
         }
@@ -53,6 +57,7 @@ public class Main {
         scanner.close();
     }
 
+    // 함수 호출을 처리하는 메서드입니다.
     private static String processFunctionCall(String call) {
         String[] parts = call.split(" ");
         String returnType = parts[0];
@@ -65,22 +70,29 @@ public class Main {
         for (int i = 0; i < numParams; i++) {
             if (Character.isUpperCase(parts[idx].charAt(0))) {
                 paramTypes.add(parts[idx]);
+                idx++;
             } else {
+                // 중첩된 함수 호출을 처리합니다.
                 StringBuilder nestedCall = new StringBuilder();
-                int nestedCallEnd = findNestedCallEnd(parts, idx);
-                for (int j = idx; j <= nestedCallEnd; j++) {
-                    nestedCall.append(parts[j]).append(" ");
+                int balance = 1;
+                nestedCall.append(parts[idx++]);
+                while (balance > 0 && idx < parts.length) {
+                    if (Character.isLowerCase(parts[idx].charAt(0))) {
+                        balance++;
+                    } else if (Character.isUpperCase(parts[idx].charAt(0))) {
+                        balance--;
+                    }
+                    nestedCall.append(" ").append(parts[idx++]);
                 }
-                idx = nestedCallEnd + 1;
                 String nestedResult = processFunctionCall(nestedCall.toString().trim());
                 if (nestedResult.equals("impossible") || nestedResult.startsWith("ambiguous")) {
                     return nestedResult;
                 }
-                paramTypes.add(nestedResult.split(" ")[0]);
+                paramTypes.add(nestedResult.split(" ")[0]); // return type을 가져옵니다.
             }
-            idx++;
         }
 
+        // 후보 함수 목록을 찾습니다.
         List<Function> candidates = new ArrayList<>();
         if (functions.containsKey(functionName)) {
             for (Function function : functions.get(functionName)) {
@@ -90,11 +102,14 @@ public class Main {
             }
         }
 
+        // 후보 함수가 없으면 "impossible"을 반환합니다.
         if (candidates.isEmpty()) {
             return "impossible";
         } else if (candidates.size() == 1) {
-            return returnType + " = " + buildFunctionCallString(functionName, numParams, paramTypes) + candidates.get(0).serialNumber;
+            // 유일한 후보 함수가 있으면 시리얼 넘버를 붙여 반환합니다.
+            return buildFunctionCallString(returnType, functionName, numParams, paramTypes, candidates.get(0).serialNumber);
         } else {
+            // 후보 함수가 여러 개이면 "ambiguous"를 반환합니다.
             if (candidates.size() > 1000) {
                 return "ambiguous > 1000";
             } else {
@@ -103,26 +118,13 @@ public class Main {
         }
     }
 
-    private static int findNestedCallEnd(String[] parts, int startIdx) {
-        int balance = 1;
-        int idx = startIdx + 1;
-        while (balance > 0 && idx < parts.length) {
-            if (Character.isUpperCase(parts[idx].charAt(0))) {
-                balance--;
-            } else {
-                balance++;
-            }
-            idx++;
-        }
-        return balance == 0 ? idx - 1 : -1;
-    }
-
-    private static String buildFunctionCallString(String functionName, int numParams, List<String> paramTypes) {
+    // 함수 호출 문자열을 빌드하는 메서드입니다.
+    private static String buildFunctionCallString(String returnType, String functionName, int numParams, List<String> paramTypes, int serialNumber) {
         StringBuilder sb = new StringBuilder();
-        sb.append(functionName).append(" ").append(numParams).append(" ");
+        sb.append(returnType).append(" = ").append(functionName).append(serialNumber).append(" ").append(numParams).append(" ");
         for (String param : paramTypes) {
             sb.append(param).append(" ");
         }
-        return sb.toString().trim() + " ";
+        return sb.toString().trim();
     }
 }
