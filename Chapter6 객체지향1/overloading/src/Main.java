@@ -1,3 +1,4 @@
+/*
 import java.util.*;
 
 // Function 클래스는 함수의 이름, 매개변수 타입 목록, 반환 타입, 시리얼 넘버를 저장합니다.
@@ -124,3 +125,4 @@ public class Main {
         return sb.toString().trim();
     }
 }
+*/
