@@ -1,11 +1,6 @@
-/*
-백준 1024 수열의 합
-첫째 줄에 N과 L이 주어진다. N은 1,000,000,000보다 작거나 같은 자연수이고,
-L은 2보다 크거나 같고, 100보다 작거나 같은 자연수이다.
-**/
 import java.util.Scanner;
 
-public class Main{
+public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -17,8 +12,8 @@ public class Main{
         boolean result = false;
 
         // L의 최소값부터 100까지 반복
-        for (int len = L; len < 100; len++) {
-            // (len -1) * len / 2는 첫번째 숫자가 0일 때 수열의 합이 len이 되는 경우
+        for (int len = L; len <= 100; len++) {
+            // (len - 1) * len / 2는 첫번째 숫자가 0일 때 수열의 합이 len이 되는 경우
             long tmp = N - (len - 1) * len / 2;
 
             // tmp가 len의 배수인지 확인
@@ -36,11 +31,12 @@ public class Main{
                 }
             }
         }
+
         // 수열을 찾지 못했을 경우 -1 출력
         if (!result) {
             System.out.println(-1);
-
         }
+
         scanner.close();
     }
 }
