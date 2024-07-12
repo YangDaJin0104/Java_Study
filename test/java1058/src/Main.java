@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Main{
-    public void main(String[] args) {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         // 사람 수 N입력
@@ -13,8 +13,8 @@ public class Main{
 
         // 각 사람의 친구 관계를 입력받아 배열에 저장
         for (int i = 0; i < N; i++) {
-            String str = scanner.nextLine();
-            friend[i] = str.toCharArray();
+            String line = scanner.nextLine();
+            friend[i] = line.toCharArray();
         }
         // 가장 유명한 사람의 2-친구 수를 저장할 변수 초기화
         int maxFamousCount = 0;
