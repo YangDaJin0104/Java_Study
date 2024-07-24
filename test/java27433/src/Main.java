@@ -7,14 +7,19 @@ public class Main {
         int N = scanner.nextInt();
         scanner.close();
 
-        // 팩토리얼 값을 저장할 변수 초기화
-        long factorial = 1;
-
-        // 1부터 N까지의 수를 반복하여 각 수를 factorial변수에 곱한다.
-        for (int i = 1; i <= N; i++) {
-            factorial *= i;
-        }
+        // 팩토리얼 값을 계산하여 변수에 저장
+        long factorial = factorial(N);
 
         System.out.println(factorial);
+    }
+
+    // 팩토리얼을 계산하는 재귀 함수
+    public static long factorial(int n) {
+        if (n == 0) {
+            return 1;
+        } else {
+            // 재귀 호출을 통해 n*(n-1)! 계산
+            return n * factorial(n - 1);
+        }
     }
 }
