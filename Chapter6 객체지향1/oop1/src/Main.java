@@ -37,6 +37,7 @@ class Tv {
 - 클래스 변수 : 인스턴스 변수 앞에 static을 붙이면 클래스 변수가 된다. 클래스 변수는 모든 인스턴스가 공통된 저장공간(변수)를 공유하게 된다.
     한 클래스의 모든 인스턴스들이 공통적인 값을 유지해야하는 속성의 경우, 클래스 변수로 선언해야한다.
 */
+/*
 class Main {
     public static void main(String[] args) {
         // 클래스 변수(static 변수)는 객체 생성 없이 '클래스이름.클래스변수'로 직접 사용 가능
@@ -69,4 +70,41 @@ class Card {
     int num;
     static int width = 100;
     static int height = 200;
+}*/
+/*
+- 메서드 : 특정 작업을 수행하는 일련의 문장들을 하나로 묶은 것
+*/
+class Main {
+    public static void main(String[] args) {
+        Math  mt = new Math(); // 인스턴스 생성
+        long result1 = mt.add(5L, 3L); // 메서드 호출
+        long result2 = mt.sub(5L, 3L);
+        long result3 = mt.multiply(5L, 3L);
+        double result4 = mt.div(5L, 3L);
+
+        System.out.println("add : " + result1);
+        System.out.println("subtract : " + result2);
+        System.out.println("multiply : " + result3);
+        System.out.println("divide : " + result4);
+
+    }
+}
+
+class Math{
+    long add(long a, long b) {
+        long result = a + b;
+        return result; // retrun a+b;
+    }
+
+    long sub(long a, long b) {
+        return a - b;
+    }
+
+    long multiply(long a, long b) {
+        return a * b;
+    }
+
+    double div(double a, double b) {
+        return a / b;
+    }
 }
